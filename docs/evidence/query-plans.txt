@@ -1,0 +1,32 @@
+A2_find_nearby_requests: open requests within ~3 km of a driver in Yaba
+
+Limit (actual time=0.049..0.051 rows=3 loops=1)
+  Buffers: shared hit=21
+  ->  Sort (actual time=0.048..0.049 rows=3 loops=1)
+        Sort Key: requested_at
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=21
+        ->  Index Scan using trips_open_requests_location on trips (actual time=0.032..0.043 rows=3 loops=1)
+              Index Cond: ((pickup_lat >= '6.485'::double precision) AND (pickup_lat <= '6.545'::double precision) AND (pickup_lng >= '3.345'::double precision) AND (pickup_lng <= '3.405'::double precision))
+              Buffers: shared hit=21
+Planning Time: 0.202 ms
+Execution Time: 0.084 ms
+
+────────────────────────────────────────────────────────────────────────────────
+
+A5_trip_history: one rider's 20 most recent trips with their ratings
+
+Limit (actual time=0.026..0.056 rows=6 loops=1)
+  Buffers: shared hit=27
+  ->  Nested Loop Left Join (actual time=0.025..0.054 rows=6 loops=1)
+        Buffers: shared hit=27
+        ->  Index Scan using trips_rider_history on trips t (actual time=0.014..0.021 rows=6 loops=1)
+              Index Cond: (rider_id = '1a2f8ce3-4d80-4dac-abc8-5a23188cc9f0'::uuid)
+              Buffers: shared hit=11
+        ->  Index Scan using ratings_once_per_side on ratings r (actual time=0.004..0.004 rows=1 loops=6)
+              Index Cond: ((trip_id = t.id) AND (rater_role = 'rider'::text))
+              Buffers: shared hit=16
+Planning:
+  Buffers: shared hit=28
+Planning Time: 0.289 ms
+Execution Time: 0.086 ms

@@ -1,0 +1,52 @@
+Rider:  Emeka Nwosu (1a2f8ce3-4d80-4dac-abc8-5a23188cc9f0)
+Driver: Uchenna Garba (9c976fb9-eee5-43a4-8ce8-bc53d4002be1)
+
+A1  Request a ride from Yaba to Ikeja
+  {"id":"2f60e897-2da1-463c-aa90-afbc9e6527f9","status":"requested","quoted_fare_minor":"385000","currency":"NGN"}
+  quoted fare: ₦3,850
+
+A1  Same request again with the same key (the app retried after a timeout)
+  rows returned: 0 (no second trip)
+
+A2  Driver near Yaba looks for open requests within about 3 km
+  {"id":"0d936962-8b78-4c8b-a94f-1dfa3c4db81c","pickup":"Waiting rider 32","fare":"₦2,200"}
+  {"id":"ad50aa3b-275d-4773-9549-6ab4c651b2fc","pickup":"Waiting rider 12","fare":"₦2,200"}
+  {"id":"9364d868-3e69-471a-9838-3fcbccf5dfb0","pickup":"Waiting rider 61","fare":"₦2,200"}
+  {"id":"2f60e897-2da1-463c-aa90-afbc9e6527f9","pickup":"Yaba Tech main gate, Herbert Macaulay Way","fare":"₦3,850"}
+  our trip is in the list: true
+
+A2  Driver accepts
+  {"id":"2f60e897-2da1-463c-aa90-afbc9e6527f9","status":"accepted","driver_name_snapshot":"Uchenna Garba","vehicle_plate_snapshot":"LND 241 HJ","vehicle_description_snapshot":"Blue Toyota Camry"}
+
+A2  A second driver taps Accept a moment later
+  rows updated: 0 (the trip is already taken)
+
+A3  Driver arrives, starts, and completes the trip (15.6 km, 52 minutes)
+  {"id":"2f60e897-2da1-463c-aa90-afbc9e6527f9","status":"arrived","arrived_at":"2026-09-25T18:20:20.028Z"}
+  {"id":"2f60e897-2da1-463c-aa90-afbc9e6527f9","status":"in_progress","started_at":"2026-09-25T18:20:20.028Z"}
+  {"id":"2f60e897-2da1-463c-aa90-afbc9e6527f9","status":"completed","quoted_fare_minor":"385000","final_fare_minor":"415000","currency":"NGN"}
+  quoted ₦3,850, final ₦4,150 (longer trip than estimated)
+  (The times are all the same because this demo runs in one transaction, and now() is the
+   transaction's start time. In the app each step is its own request, minutes apart.)
+
+A4  Rider pays by card
+  {"id":"b49d9370-2faf-4b88-ae44-35783aa4cbf8","status":"pending","amount_minor":"415000","currency":"NGN","method":"card"}
+
+A4  Card processor confirms
+  {"id":"b49d9370-2faf-4b88-ae44-35783aa4cbf8","status":"succeeded","provider_reference":"PSK_demo_0001"}
+
+A4  The pay request is retried with the same key
+  rows returned: 0 (no second payment)
+
+A5  Rider rates the driver 5 stars
+  {"id":"f2a4de8e-68a1-4a6f-ab5c-5ff289fbcdf1","rater_role":"rider","score":5}
+  driver's rating totals: 160/32 → 165/33 (average 5.00)
+
+A5  Rider opens their trip history (newest 5 shown)
+  {"requested":"2026-09-25T18:20","status":"completed","fare":"₦4,150","driver":"Uchenna Garba","my_rating":5}
+  {"requested":"2026-09-08T16:50","status":"completed","fare":"₦1,900","driver":"Nnamdi Afolabi","my_rating":null}
+  {"requested":"2026-08-22T17:56","status":"completed","fare":"₦4,100","driver":"Ibrahim Adewale","my_rating":5}
+  {"requested":"2026-08-03T03:09","status":"completed","fare":"₦2,100","driver":"Nnamdi Afolabi","my_rating":5}
+  {"requested":"2026-07-17T00:27","status":"completed","fare":"₦3,150","driver":"Ibrahim Adewale","my_rating":5}
+
+(Rolled back: the sample data is unchanged.)

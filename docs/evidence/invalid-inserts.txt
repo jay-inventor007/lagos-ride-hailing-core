@@ -1,0 +1,33 @@
+1. A rider requests a second ride while one is still in progress (R1)
+  rejected by trips_one_active_per_rider
+  REJECTED  code 23505, constraint trips_one_active_per_rider
+  ERROR:    duplicate key value violates unique constraint "trips_one_active_per_rider"
+  DETAIL:   Key (rider_id)=(4d385217-51ed-4a09-a556-c4ded5000a2e) already exists.
+
+2. A rating for a trip that hasn't finished (R5)
+  rejected by ratings_trip_must_be_completed
+  REJECTED  code 23503, constraint ratings_trip_must_be_completed
+  ERROR:    insert or update on table "ratings" violates foreign key constraint "ratings_trip_must_be_completed"
+  DETAIL:   Key (trip_id, trip_status)=(f80bf79e-39c9-40ad-92c8-f3b02a711c82, completed) is not present in table "trips".
+
+3. A payment for less than the trip's final fare (R4)
+  rejected by payments_match_trip_final_fare
+  REJECTED  code 23503, constraint payments_match_trip_final_fare
+  ERROR:    insert or update on table "payments" violates foreign key constraint "payments_match_trip_final_fare"
+  DETAIL:   Key (trip_id, amount_minor, currency)=(001600bd-8a8b-41c1-8b90-6898a4ba4478, 90000, NGN) is not present in table "trips".
+
+4. A finished trip is moved back to in progress (state machine)
+  rejected by trips_allowed_transition
+  REJECTED  code 23514, constraint trips_allowed_transition
+  ERROR:    Trip 5b8fc4d0-0aae-4b24-936b-735a0fdd4d61 cannot go from completed to in_progress
+
+5. A second Lagos price list that overlaps the current one (R3)
+  rejected by fare_rules_no_overlap
+  REJECTED  code 23P01, constraint fare_rules_no_overlap
+  ERROR:    conflicting key value violates exclusion constraint "fare_rules_no_overlap"
+  DETAIL:   Key (city, tstzrange(effective_from, effective_to))=(Lagos, ["2026-08-31 23:00:00+00",)) conflicts with existing key (city, tstzrange(effective_from, effective_to))=(Lagos, ["2026-06-30 23:00:00+00",)).
+
+6. A trip in progress is cancelled after the rider is already in the car
+  rejected by trips_allowed_transition
+  REJECTED  code 23514, constraint trips_allowed_transition
+  ERROR:    Trip f80bf79e-39c9-40ad-92c8-f3b02a711c82 cannot go from in_progress to cancelled
