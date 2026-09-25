@@ -1,0 +1,24 @@
+{
+  "name": "ride-hailing-api-design",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "db:reset": "tsx --env-file-if-exists=.env scripts/reset.ts",
+    "queries": "tsx --env-file-if-exists=.env scripts/run-queries.ts",
+    "invalid": "tsx --env-file-if-exists=.env scripts/invalid-inserts.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
