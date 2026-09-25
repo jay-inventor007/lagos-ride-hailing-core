@@ -163,9 +163,9 @@ Everything not in the list above is forbidden. The important ones:
 | `accepted` → `in_progress`         | Skipping `arrived` loses the moment the driver reached the pickup. No-show and waiting disputes depend on that timestamp. |
 | Any backwards step                 | E.g. `arrived` → `accepted`. The timestamps would stop making sense.                  |
 
-I didn't see the `in_progress` → `cancelled` problem until I drew the diagram. "Cancel" felt like it
-should be possible from anywhere before the end. Drawing it showed that cancelling and completing
-are both ways a trip *ends*, and only one of them charges money.
+The `in_progress` → `cancelled` problem is easy to miss, because "cancel" feels like it should be
+possible any time before the end. Drawing the diagram shows that cancelling and completing are both
+ways a trip *ends*, and only one of them charges money.
 
 ### What enforces it
 
@@ -297,7 +297,7 @@ down writes and takes space, so each one has to serve a real query.
 
 | Action | Query                                  | Index                                                                   | Why this shape                                                                 |
 | ------ | -------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| A1     | `A1_request_ride`: current price list  | the gist index behind `fare_rules_no_overlap`                           | the constraint's own index answers "which list covers now, for Lagos"          |
+| A1     | `A1_request_ride`: current price list  | the gist index behind `fare_rules_no_overlap`                           | the constraint's own index answers "which list covers now, for Lagos". With only 3 price lists today, Postgres just reads the table; the index matters as price history grows |
 | A1     | `A1_request_ride`: one active trip?    | `trips_one_active_per_rider`                                            | the insert checks it anyway; it's also how "my current trip" is found          |
 | A2     | `A2_find_nearby_requests`              | `trips_open_requests_location (pickup_lat, pickup_lng) where status = 'requested'` | partial: only the ~120 waiting requests are in it, not the 20,000 finished trips |
 | A2     | `A2_accept`                            | primary key; `trips_one_active_per_driver`                              |                                                                                |
