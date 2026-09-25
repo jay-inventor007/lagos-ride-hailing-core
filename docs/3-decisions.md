@@ -137,6 +137,20 @@ stateDiagram-v2
     in_progress --> completed : dropoff reached (A3)
     completed --> [*]
     cancelled --> [*]
+    note right of in_progress
+        FORBIDDEN: in_progress to cancelled.
+        The rider is in the car, so the trip
+        must end as completed, with a fare.
+    end note
+    note left of accepted
+        FORBIDDEN: accepted to in_progress.
+        The driver must mark arrived first.
+    end note
+    note right of cancelled
+        FORBIDDEN: any change out of
+        completed or cancelled, and
+        any step backwards.
+    end note
 ```
 
 ### Allowed changes

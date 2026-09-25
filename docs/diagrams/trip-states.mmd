@@ -1,0 +1,25 @@
+stateDiagram-v2
+    [*] --> requested : rider requests (A1)
+    requested --> accepted : a driver accepts (A2)
+    requested --> cancelled : rider gives up, or no driver found
+    accepted --> arrived : driver reaches pickup (A3)
+    accepted --> cancelled : rider or driver cancels
+    arrived --> in_progress : rider gets in (A3)
+    arrived --> cancelled : rider doesn't show up, or changes mind
+    in_progress --> completed : dropoff reached (A3)
+    completed --> [*]
+    cancelled --> [*]
+    note right of in_progress
+        FORBIDDEN: in_progress to cancelled.
+        The rider is in the car, so the trip
+        must end as completed, with a fare.
+    end note
+    note left of accepted
+        FORBIDDEN: accepted to in_progress.
+        The driver must mark arrived first.
+    end note
+    note right of cancelled
+        FORBIDDEN: any change out of
+        completed or cancelled, and
+        any step backwards.
+    end note

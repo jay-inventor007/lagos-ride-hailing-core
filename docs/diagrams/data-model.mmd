@@ -1,0 +1,82 @@
+erDiagram
+    RIDER ||--o{ TRIP : "requests"
+    DRIVER ||--o{ TRIP : "drives"
+    DRIVER ||--o{ VEHICLE : "owns"
+    VEHICLE ||--o{ TRIP : "is used for"
+    FARE_RULE ||--o{ TRIP : "prices"
+    TRIP ||--o{ PAYMENT : "is paid by"
+    TRIP ||--o{ RATING : "is rated by"
+
+    RIDER {
+        uuid id PK
+        text full_name
+        text phone UK
+        text email UK
+        int rating_sum
+        int rating_count
+        timestamptz deleted_at
+    }
+    DRIVER {
+        uuid id PK
+        text full_name
+        text phone UK
+        text licence_number UK
+        boolean is_online
+        int rating_sum
+        int rating_count
+        timestamptz deleted_at
+    }
+    VEHICLE {
+        uuid id PK
+        uuid driver_id FK
+        text plate_number
+        text make
+        text model
+        text colour
+        boolean is_active
+        timestamptz deleted_at
+    }
+    FARE_RULE {
+        uuid id PK
+        text city
+        char currency
+        bigint base_fare_minor
+        bigint per_km_minor
+        bigint per_minute_minor
+        bigint minimum_fare_minor
+        timestamptz effective_from
+        timestamptz effective_to
+    }
+    TRIP {
+        uuid id PK
+        uuid rider_id FK
+        uuid driver_id FK
+        uuid vehicle_id FK
+        uuid fare_rule_id FK
+        text status
+        text request_key
+        bigint quoted_fare_minor
+        bigint final_fare_minor
+        char currency
+        text driver_name_snapshot
+        text vehicle_plate_snapshot
+        timestamptz requested_at
+        timestamptz completed_at
+    }
+    PAYMENT {
+        uuid id PK
+        uuid trip_id FK
+        bigint amount_minor
+        char currency
+        text method
+        text status
+        text idempotency_key UK
+        text provider_reference UK
+    }
+    RATING {
+        uuid id PK
+        uuid trip_id FK
+        text rater_role
+        smallint score
+        text comment
+    }
