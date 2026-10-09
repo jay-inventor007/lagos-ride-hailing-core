@@ -1,8 +1,16 @@
-# Ride-Hailing: API Design and Data Model
+# Lagos Ride-Hailing Core Engine: API Design & Data Model
 
-A complete design for a ride-hailing service in Lagos and Abuja: the requirements, the data model,
-the decisions behind it, and the API contract. It's written before any application code, as the
-document a team would agree on first.
+> **A production-ready systems architecture, OpenAPI contract, and PostgreSQL state machine data model for urban ride-hailing across Lagos and Abuja.**
+
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791.svg)](https://www.postgresql.org/)
+[![Database Invariants](https://img.shields.io/badge/schema%20invariants-verified-success.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+---
+
+## Overview
+
+A complete systems design for a ride-hailing service operating in emerging urban transit environments (Lagos and Abuja): domain requirements, state machine invariants, the relational data model, architectural tradeoffs, and the client API contract. It is formulated prior to application code as the foundational specification for distributed engineering teams.
 
 Only the **database** is built, to prove the model holds: the schema with its constraints and
 indexes, sample data, the queries behind the five key actions, their query plans, and six invalid
